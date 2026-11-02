@@ -474,6 +474,84 @@ app.post('/api/articles', requireAuthApi, (req, res) => {
   res.status(201).json({ success: true, article: newArticle });
 });
 
+// 5.5 Update / Edit Existing Article - PROTECTED
+app.put('/api/articles/:id', requireAuthApi, (req, res) => {
+  const {
+    title,
+    category,
+    content,
+    excerpt,
+    author,
+    imageUrl,
+    imageCaption,
+    isBreaking,
+    isLead
+  } = req.body;
+
+  if (!title || !content) {
+    return res.status(400).json({ error: 'Title and Content are required.' });
+  }
+
+  const articles = readJson(articlesFile, defaultArticles);
+  const index = articles.findIndex(a => a.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: 'Article not found.' });
+  }
+
+  // If marked as lead, unpin other leads
+  if (isLead) {
+    articles.forEach(a => {
+      if (a.id !== req.params.id) a.isLead = false;
+    });
+  }
+
+  const computedExcerpt = excerpt && excerpt.trim()
+    ? excerpt.trim()
+    : content.replace(/###|##|#|\*\*|\*|_|\[.*?\]\(.*?\)/g, '').slice(0, 180).trim() + '...';
+
+  articles[index] = {
+    ...articles[index],
+    title: title.trim(),
+    slug: title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+    category: category || articles[index].category,
+    author: author && author.trim() ? author.trim() : articles[index].author,
+    imageUrl: imageUrl || articles[index].imageUrl,
+    imageCaption: imageCaption !== undefined ? imageCaption : articles[index].imageCaption,
+    excerpt: computedExcerpt,
+    content: content.trim(),
+    isBreaking: Boolean(isBreaking),
+    isLead: Boolean(isLead),
+    updatedAt: new Date().toISOString()
+  };
+
+  writeJson(articlesFile, articles);
+
+  // If breaking flag changed/updated, reflect in settings
+  if (isBreaking) {
+    const settings = readJson(settingsFile, defaultSettings);
+    if (!settings.breakingNews) settings.breakingNews = { enabled: true, items: [] };
+    if (!Array.isArray(settings.breakingNews.items)) settings.breakingNews.items = [];
+    
+    // Check if already in breaking items
+    const existingIdx = settings.breakingNews.items.findIndex(item => item.link && item.link.includes(req.params.id));
+    if (existingIdx !== -1) {
+      settings.breakingNews.items[existingIdx].text = articles[index].title;
+    } else {
+      settings.breakingNews.items.unshift({
+        id: `brk-${crypto.randomUUID().slice(0, 8)}`,
+        text: articles[index].title,
+        link: `/article.html?id=${articles[index].id}`
+      });
+    }
+    settings.breakingNews.enabled = true;
+    settings.breakingNews.updatedAt = new Date().toISOString();
+    writeJson(settingsFile, settings);
+  }
+
+  res.json({ success: true, article: articles[index] });
+});
+
 // 6. Delete Article - PROTECTED
 app.delete('/api/articles/:id', requireAuthApi, (req, res) => {
   let articles = readJson(articlesFile, defaultArticles);

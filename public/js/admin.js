@@ -233,9 +233,12 @@ function insertFormat(prefix, suffix) {
   textarea.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
 }
 
-// 5. Post & Publish Story
+// 5. Post & Publish Story (or Update if Editing)
 async function handlePublishStory(e) {
   e.preventDefault();
+
+  const editId = document.getElementById('editingArticleId').value;
+  const isEditing = Boolean(editId);
 
   const title = document.getElementById('storyTitle').value.trim();
   const category = document.getElementById('storyCategory').value;
@@ -253,11 +256,14 @@ async function handlePublishStory(e) {
 
   const btn = document.getElementById('publishBtn');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Publishing...';
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${isEditing ? 'Saving Changes...' : 'Publishing...'}`;
 
   try {
-    const res = await cmsFetch('/api/articles', {
-      method: 'POST',
+    const url = isEditing ? `/api/articles/${editId}` : '/api/articles';
+    const method = isEditing ? 'PUT' : 'POST';
+
+    const res = await cmsFetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         title,
@@ -273,28 +279,118 @@ async function handlePublishStory(e) {
 
     const data = await res.json();
     if (res.ok && data.success) {
-      showNotice('Story published successfully!', `/article.html?id=${data.article.id}`);
+      showNotice(
+        isEditing ? 'Story updated successfully!' : 'Story published successfully!',
+        `/article.html?id=${data.article.id}`
+      );
 
-      // Reset form
-      document.getElementById('storyTitle').value = '';
-      document.getElementById('storyContent').value = '';
-      document.getElementById('storyImageUrl').value = '';
-      document.getElementById('storyImageCaption').value = '';
-      document.getElementById('imagePreviewBox').style.display = 'none';
-      document.getElementById('storyIsBreaking').checked = false;
+      // Reset editing state and form
+      cancelEditStory();
 
       // Reload list and stats
       loadAdminArticles();
       loadAdminSettings();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      alert('Error publishing story: ' + (data.error || 'Server error'));
+      alert('Error: ' + (data.error || 'Server error'));
     }
   } catch (err) {
     alert('Failed to connect to newsroom server: ' + err.message);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW';
+    if (document.getElementById('editingArticleId').value) {
+      btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> SAVE & UPDATE STORY';
+    } else {
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW';
+    }
+  }
+}
+
+// Start Editing an existing article
+function startEditStory(id) {
+  const art = allAdminArticles.find(a => a.id === id);
+  if (!art) {
+    alert('Article not found.');
+    return;
+  }
+
+  document.getElementById('editingArticleId').value = art.id;
+  document.getElementById('storyTitle').value = art.title || '';
+  
+  if (art.category) {
+    const catSelect = document.getElementById('storyCategory');
+    const options = Array.from(catSelect.options).map(o => o.value);
+    if (options.includes(art.category.toUpperCase())) {
+      catSelect.value = art.category.toUpperCase();
+    } else {
+      catSelect.value = art.category;
+    }
+  }
+
+  document.getElementById('storyAuthor').value = art.author || 'ആഷിഖ് / റിപ്പോർട്ടർ';
+  document.getElementById('storyImageUrl').value = art.imageUrl || '';
+  document.getElementById('storyImageCaption').value = art.imageCaption || '';
+  document.getElementById('storyIsBreaking').checked = Boolean(art.isBreaking);
+  document.getElementById('storyIsLead').checked = Boolean(art.isLead);
+  document.getElementById('storyContent').value = art.content || '';
+
+  updateImagePreview();
+
+  // Show editing banner & change button
+  const banner = document.getElementById('editingModeBanner');
+  if (banner) {
+    banner.style.display = 'flex';
+    document.getElementById('editingArticleTitleText').textContent = art.title;
+  }
+  const cancelBtn = document.getElementById('cancelEditBtn');
+  if (cancelBtn) cancelBtn.style.display = 'inline-block';
+
+  const publishBtn = document.getElementById('publishBtn');
+  if (publishBtn) {
+    publishBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> SAVE & UPDATE STORY';
+    publishBtn.style.background = '#0284c7';
+    publishBtn.style.borderColor = '#0284c7';
+  }
+
+  const hint = document.getElementById('formStatusHint');
+  if (hint) {
+    hint.textContent = 'Editing article. Make your changes and click Save & Update.';
+    hint.style.color = '#0284c7';
+  }
+
+  // Smooth scroll to form
+  const formCard = document.getElementById('publishForm');
+  if (formCard) formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Cancel Editing and reset form
+function cancelEditStory() {
+  document.getElementById('editingArticleId').value = '';
+  document.getElementById('storyTitle').value = '';
+  document.getElementById('storyContent').value = '';
+  document.getElementById('storyImageUrl').value = '';
+  document.getElementById('storyImageCaption').value = '';
+  document.getElementById('imagePreviewBox').style.display = 'none';
+  document.getElementById('storyIsBreaking').checked = false;
+  document.getElementById('storyIsLead').checked = false;
+
+  const banner = document.getElementById('editingModeBanner');
+  if (banner) banner.style.display = 'none';
+
+  const cancelBtn = document.getElementById('cancelEditBtn');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+
+  const publishBtn = document.getElementById('publishBtn');
+  if (publishBtn) {
+    publishBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW';
+    publishBtn.style.background = '';
+    publishBtn.style.borderColor = '';
+  }
+
+  const hint = document.getElementById('formStatusHint');
+  if (hint) {
+    hint.textContent = 'Ready to go live? No extra steps required.';
+    hint.style.color = '#6b7280';
   }
 }
 
@@ -344,10 +440,13 @@ async function loadAdminArticles() {
         <td style="padding:0.75rem 0.5rem; color:#6b7280; font-size:0.8rem;">${formatDateShort(a.publishedAt)}</td>
         <td style="padding:0.75rem 0.5rem; color:#111827; font-weight:600;">${(a.views || 0).toLocaleString()}</td>
         <td style="padding:0.75rem 0.5rem; text-align:right; white-space:nowrap;">
-          <a href="/article.html?id=${a.id}" target="_blank" style="padding:0.3rem 0.6rem; background:#f3f4f6; border-radius:4px; font-weight:600; font-size:0.8rem; margin-right:6px;">
+          <button onclick="startEditStory('${a.id}')" style="padding:0.3rem 0.65rem; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:4px; font-weight:700; font-size:0.8rem; margin-right:6px; cursor:pointer;">
+            <i class="fa-solid fa-pen-to-square"></i> Edit
+          </button>
+          <a href="/article.html?id=${a.id}" target="_blank" style="padding:0.3rem 0.6rem; background:#f3f4f6; border-radius:4px; font-weight:600; font-size:0.8rem; margin-right:6px; border:1px solid #e5e7eb;">
             <i class="fa-solid fa-eye"></i> View
           </a>
-          <button onclick="deleteStory('${a.id}')" style="padding:0.3rem 0.6rem; background:#fee2e2; color:#dc2626; border:none; border-radius:4px; font-weight:600; font-size:0.8rem; cursor:pointer;">
+          <button onclick="deleteStory('${a.id}')" style="padding:0.3rem 0.6rem; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; border-radius:4px; font-weight:600; font-size:0.8rem; cursor:pointer;">
             <i class="fa-solid fa-trash"></i> Delete
           </button>
         </td>

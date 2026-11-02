@@ -493,6 +493,19 @@
       </p>
 
       <form id="publishForm" onsubmit="handlePublishStory(event)">
+        <input type="hidden" id="editingArticleId" value="">
+
+        <!-- EDITING MODE BANNER -->
+        <div id="editingModeBanner" style="display:none; background:#eff6ff; border:1.5px solid #60a5fa; color:#1e40af; padding:0.85rem 1rem; border-radius:8px; margin-bottom:1.25rem; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+          <div style="font-weight:700; display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-pen-to-square" style="color:#2563eb; font-size:1.1rem;"></i>
+            <span>Editing Article: <span id="editingArticleTitleText" style="color:#0f172a; font-weight:800;"></span></span>
+          </div>
+          <button type="button" onclick="cancelEditStory()" style="background:#ffffff; border:1px solid #93c5fd; color:#1d4ed8; padding:0.35rem 0.85rem; border-radius:6px; font-weight:700; cursor:pointer; font-size:0.82rem; display:inline-flex; align-items:center; gap:5px;">
+            <i class="fa-solid fa-xmark"></i> Cancel Edit
+          </button>
+        </div>
+
         <!-- 1. Headline -->
         <div class="form-group">
           <label class="form-label">Headline / Title <span style="color:red;">*</span></label>
@@ -590,11 +603,16 @@ You can use the buttons above to add quotes or subheadings." required></textarea
         </div>
 
         <!-- Submit Button -->
-        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:1rem; border-top:1px solid #e5e7eb;">
-          <span style="font-size:0.85rem; color:#6b7280;">Ready to go live? No extra steps required.</span>
-          <button type="submit" class="btn-publish" id="publishBtn">
-            <i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW
-          </button>
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:1rem; border-top:1px solid #e5e7eb; flex-wrap:wrap; gap:10px;">
+          <span id="formStatusHint" style="font-size:0.85rem; color:#6b7280;">Ready to go live? No extra steps required.</span>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button type="button" id="cancelEditBtn" onclick="cancelEditStory()" style="display:none; padding:0.7rem 1.25rem; border:1px solid #cbd5e1; background:#f1f5f9; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.92rem; color:#475569;">
+              <i class="fa-solid fa-xmark"></i> Cancel Edit
+            </button>
+            <button type="submit" class="btn-publish" id="publishBtn">
+              <i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW
+            </button>
+          </div>
         </div>
       </form>
     </section>
