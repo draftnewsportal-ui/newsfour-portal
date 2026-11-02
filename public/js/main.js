@@ -238,7 +238,7 @@ function renderHeroTrio(articles) {
         <p class="trio-top-excerpt">${escapeHtml(topStory.excerpt || '')}</p>
         <div class="trio-meta">
           <span><i class="fa-regular fa-clock"></i> ${formatTimeAgo(topStory.publishedAt)}</span>
-          <span><i class="fa-regular fa-eye"></i> ${(topStory.views || 0).toLocaleString()} Views</span>
+          <span><i class="fa-regular fa-eye"></i> ${(topStory.views || 0).toLocaleString()} Reads</span>
           <span><i class="fa-regular fa-user"></i> ${escapeHtml(topStory.author || 'Reporter')}</span>
         </div>
       </div>
@@ -264,7 +264,7 @@ function renderHeroTrio(articles) {
               </h3>
               <div class="trio-meta">
                 <span><i class="fa-regular fa-clock"></i> ${formatTimeAgo(bStory.publishedAt)}</span>
-                <span><i class="fa-regular fa-eye"></i> ${(bStory.views || 0).toLocaleString()} Views</span>
+                <span><i class="fa-regular fa-eye"></i> ${(bStory.views || 0).toLocaleString()} Reads</span>
               </div>
             </div>
           </article>
@@ -308,6 +308,7 @@ function renderGrid(articles, excludedIds = []) {
         <div class="article-meta">
           <span><i class="fa-regular fa-user"></i> ${escapeHtml(a.author)}</span>
           <span><i class="fa-regular fa-clock"></i> ${formatTimeAgo(a.publishedAt)}</span>
+          <span><i class="fa-regular fa-eye"></i> ${(a.views || 0).toLocaleString()} Reads</span>
         </div>
       </div>
     </article>

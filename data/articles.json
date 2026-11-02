@@ -12,7 +12,8 @@
     "isBreaking": false,
     "isLead": true,
     "views": 5,
-    "publishedAt": "2026-10-24T10:50:18.044Z"
+    "publishedAt": "2026-10-24T10:50:18.044Z",
+    "updatedAt": "2026-11-02T06:08:58.120Z"
   },
   {
     "id": "art-001",
@@ -26,7 +27,7 @@
     "imageCaption": "മെട്രോ പിങ്ക് ലൈൻ നിർമ്മാണത്തിനായുള്ള പ്രാഥമിക പൈലിംഗ് ജോലികൾ ആരംഭിച്ചു.",
     "isBreaking": true,
     "isLead": false,
-    "views": 2492,
+    "views": 0,
     "publishedAt": "2026-10-24T09:15:00.000Z"
   },
   {
@@ -41,7 +42,7 @@
     "imageCaption": "പോലീസ് സംഘം സ്ഥലത്തെത്തി അന്വേഷണം ആരംഭിച്ചു.",
     "isBreaking": true,
     "isLead": false,
-    "views": 1855,
+    "views": 0,
     "publishedAt": "2026-10-24T08:30:00.000Z"
   },
   {
@@ -56,7 +57,7 @@
     "imageCaption": "വിജയാഘോഷത്തിൽ കേരള താരങ്ങൾ.",
     "isBreaking": false,
     "isLead": false,
-    "views": 3121,
+    "views": 0,
     "publishedAt": "2026-10-24T06:00:00.000Z"
   },
   {
@@ -71,7 +72,7 @@
     "imageCaption": "ഇൻഫോപാർക്കിലെ പുതിയ ഐടി കോംപ്ലക്സ്.",
     "isBreaking": false,
     "isLead": false,
-    "views": 1423,
+    "views": 0,
     "publishedAt": "2026-10-24T04:20:00.000Z"
   },
   {
@@ -86,7 +87,7 @@
     "imageCaption": "നിശാഗന്ധിയിൽ ചലച്ചിത്രമേളയുടെ ഉദ്ഘാടന ചടങ്ങ്.",
     "isBreaking": false,
     "isLead": false,
-    "views": 2180,
+    "views": 0,
     "publishedAt": "2026-10-23T18:00:00.000Z"
   },
   {
@@ -101,7 +102,7 @@
     "imageCaption": "ദുബായ് നഗരദൃശ്യം.",
     "isBreaking": false,
     "isLead": false,
-    "views": 3951,
+    "views": 0,
     "publishedAt": "2026-10-23T14:00:00.000Z"
   }
 ]

@@ -304,9 +304,14 @@
         <div class="stat-val" id="statTotalStories">5</div>
         <div class="stat-lbl">Published Stories</div>
       </div>
-      <div class="stat-pill">
-        <div class="stat-val" id="statTotalViews">6,100</div>
-        <div class="stat-lbl">Reader Views</div>
+      <div class="stat-pill" style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div class="stat-val" id="statTotalViews">0</div>
+          <div class="stat-lbl">Verified Reader Views</div>
+        </div>
+        <button type="button" onclick="confirmResetAllViews()" title="Reset all article view counters to 0" style="background:#f1f5f9; border:1px solid #cbd5e1; color:#475569; padding:0.25rem 0.55rem; border-radius:5px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:2px;">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
       </div>
       <div class="stat-pill">
         <div class="stat-val" style="color:#dc2626;" id="statBreakingStatus">ACTIVE</div>

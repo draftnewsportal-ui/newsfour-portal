@@ -438,15 +438,19 @@ async function loadAdminArticles() {
         </td>
         <td style="padding:0.75rem 0.5rem; color:#4b5563; font-weight:600;">${escapeHtml(formatSegmentName(a.category))}</td>
         <td style="padding:0.75rem 0.5rem; color:#6b7280; font-size:0.8rem;">${formatDateShort(a.publishedAt)}</td>
-        <td style="padding:0.75rem 0.5rem; color:#111827; font-weight:600;">${(a.views || 0).toLocaleString()}</td>
+        <td style="padding:0.75rem 0.5rem; white-space:nowrap;">
+          <span style="background:#f1f5f9; padding:0.25rem 0.6rem; border-radius:12px; font-weight:700; font-size:0.8rem; color:#0f172a; display:inline-flex; align-items:center; gap:5px; border:1px solid #e2e8f0;">
+            <i class="fa-regular fa-eye" style="color:#0284c7;"></i> ${(a.views || 0).toLocaleString()}
+          </span>
+        </td>
         <td style="padding:0.75rem 0.5rem; text-align:right; white-space:nowrap;">
-          <button onclick="startEditStory('${a.id}')" style="padding:0.3rem 0.65rem; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:4px; font-weight:700; font-size:0.8rem; margin-right:6px; cursor:pointer;">
+          <button onclick="startEditStory('${a.id}')" style="padding:0.3rem 0.65rem; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe; border-radius:4px; font-weight:700; font-size:0.8rem; margin-right:6px; cursor:pointer;" title="Edit this story">
             <i class="fa-solid fa-pen-to-square"></i> Edit
           </button>
-          <a href="/article.html?id=${a.id}" target="_blank" style="padding:0.3rem 0.6rem; background:#f3f4f6; border-radius:4px; font-weight:600; font-size:0.8rem; margin-right:6px; border:1px solid #e5e7eb;">
+          <a href="/article.html?id=${a.id}" target="_blank" style="padding:0.3rem 0.6rem; background:#f3f4f6; border-radius:4px; font-weight:600; font-size:0.8rem; margin-right:6px; border:1px solid #e5e7eb; color:#374151;" title="View public story">
             <i class="fa-solid fa-eye"></i> View
           </a>
-          <button onclick="deleteStory('${a.id}')" style="padding:0.3rem 0.6rem; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; border-radius:4px; font-weight:600; font-size:0.8rem; cursor:pointer;">
+          <button onclick="deleteStory('${a.id}')" style="padding:0.3rem 0.6rem; background:#fee2e2; color:#dc2626; border:1px solid #fecaca; border-radius:4px; font-weight:600; font-size:0.8rem; cursor:pointer;" title="Delete this story">
             <i class="fa-solid fa-trash"></i> Delete
           </button>
         </td>
@@ -472,6 +476,30 @@ async function deleteStory(id) {
     }
   } catch (err) {
     alert('Error: ' + err.message);
+  }
+}
+
+// Reset all article view counters to 0
+async function confirmResetAllViews() {
+  if (!confirm('Are you sure you want to reset ALL article view counters to 0? This will give you a fresh, accurate start for counting real live visitors.')) {
+    return;
+  }
+
+  try {
+    const res = await cmsFetch('/api/admin/reset-views', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ all: true })
+    });
+    const data = await res.json();
+    if (res.ok && data.success) {
+      showNotice('All article view counters have been reset to 0!');
+      loadAdminArticles();
+    } else {
+      alert('Failed to reset views: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    alert('Failed to connect to newsroom server: ' + err.message);
   }
 }
 

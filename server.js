@@ -182,7 +182,7 @@ Construction on the first route along Grand Avenue is projected to commence earl
     imageCaption: 'Electric transit buses slated for deployment along Grand Avenue starting early next year.',
     isBreaking: true,
     isLead: true,
-    views: 1420,
+    views: 0,
     publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
   },
   {
@@ -201,7 +201,7 @@ Admission will remain free for all residents, courtesy of support from regional 
     imageCaption: 'The South Pier stage will host musical performances and community workshops throughout the festival.',
     isBreaking: false,
     isLead: false,
-    views: 890,
+    views: 0,
     publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
   },
   {
@@ -220,7 +220,7 @@ With playoff seeding on the line, substitute winger Tariq Gomez leveled the scor
     imageCaption: 'Fans celebrating at Riverfront Stadium as Metro United lifts the regional trophy.',
     isBreaking: false,
     isLead: false,
-    views: 2150,
+    views: 0,
     publishedAt: new Date(Date.now() - 9 * 60 * 60 * 1000).toISOString()
   },
   {
@@ -239,7 +239,7 @@ Applications for the inaugural cohort open next Monday, with selection panels em
     imageCaption: 'Entrepreneurs collaborating inside the Innovation Nexus laboratory space.',
     isBreaking: false,
     isLead: false,
-    views: 640,
+    views: 0,
     publishedAt: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString()
   },
   {
@@ -256,7 +256,7 @@ Public works crews have cleared storm drains across key arterial intersections, 
     imageCaption: 'Commuters navigating rainfall in the central district on Saturday.',
     isBreaking: true,
     isLead: false,
-    views: 1890,
+    views: 0,
     publishedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
   }
 ];
@@ -384,7 +384,7 @@ app.get('/api/articles', (req, res) => {
   res.json(filtered);
 });
 
-// 4. Get Single Article by ID & increment view count
+// 4. Get Single Article by ID & increment view count (with session deduplication)
 app.get('/api/articles/:id', (req, res) => {
   const articles = readJson(articlesFile, defaultArticles);
   const article = articles.find(a => a.id === req.params.id);
@@ -393,9 +393,12 @@ app.get('/api/articles/:id', (req, res) => {
     return res.status(404).json({ error: 'Article not found' });
   }
 
-  // Increment view count
-  article.views = (article.views || 0) + 1;
-  writeJson(articlesFile, articles);
+  // Increment view count unless explicitly bypassed (e.g. preview or refresh within same session)
+  const isBypassed = req.query.noview === '1' || req.query.noview === 'true';
+  if (!isBypassed) {
+    article.views = (article.views || 0) + 1;
+    writeJson(articlesFile, articles);
+  }
 
   res.json(article);
 });
@@ -565,6 +568,29 @@ app.delete('/api/articles/:id', requireAuthApi, (req, res) => {
   writeJson(articlesFile, articles);
 
   res.json({ success: true, message: 'Article deleted successfully.' });
+});
+
+// 6b. Reset Article Views (Single article or all articles) - PROTECTED
+app.post('/api/admin/reset-views', requireAuthApi, (req, res) => {
+  const { articleId } = req.body || {};
+  let articles = readJson(articlesFile, defaultArticles);
+
+  if (articleId) {
+    const art = articles.find(a => a.id === articleId);
+    if (!art) {
+      return res.status(404).json({ error: 'Article not found' });
+    }
+    art.views = 0;
+    writeJson(articlesFile, articles);
+    return res.json({ success: true, message: `View counter reset to 0 for "${art.title}"`, articleId });
+  }
+
+  // Reset all articles to 0 views
+  articles.forEach(a => {
+    a.views = 0;
+  });
+  writeJson(articlesFile, articles);
+  return res.json({ success: true, message: 'All article view counters successfully reset to 0!' });
 });
 
 // 7. Image Upload Endpoint - PROTECTED

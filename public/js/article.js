@@ -129,10 +129,21 @@ async function loadArticle() {
   }
 
   try {
-    const res = await fetch(`/api/articles/${encodeURIComponent(articleId)}`);
+    // Check if user has already opened this story during this browser session
+    const sessionKey = `n4_read_${articleId}`;
+    const alreadyCountedInSession = Boolean(sessionStorage.getItem(sessionKey));
+
+    // If already counted in this session, request with ?noview=1 to avoid refresh-spamming
+    const endpoint = `/api/articles/${encodeURIComponent(articleId)}${alreadyCountedInSession ? '?noview=1' : ''}`;
+    const res = await fetch(endpoint);
     if (!res.ok) {
       showError('Story not found or may have been removed.');
       return;
+    }
+
+    // Mark as read in this browser session
+    if (!alreadyCountedInSession) {
+      sessionStorage.setItem(sessionKey, Date.now().toString());
     }
 
     currentArticle = await res.json();
@@ -169,7 +180,17 @@ function renderArticle(art) {
   const formattedDate = dateObj.toLocaleDateString('en-US', options);
   
   document.getElementById('articleDate').textContent = formattedDate;
-  document.getElementById('articleViews').textContent = (art.views || 1).toLocaleString();
+
+  // Genuine Reader View Counts
+  const readCount = Math.max(0, Number(art.views || 0));
+  const viewsEl = document.getElementById('articleViews');
+  if (viewsEl) viewsEl.textContent = readCount.toLocaleString();
+
+  const toolbarViewsEl = document.getElementById('articleViewsToolbar');
+  if (toolbarViewsEl) toolbarViewsEl.textContent = readCount.toLocaleString();
+
+  const readersTextEl = document.getElementById('articleReadersText');
+  if (readersTextEl) readersTextEl.innerHTML = `<strong>${readCount.toLocaleString()}</strong> വായനക്കാർ`;
 
   if (art.isBreaking) {
     document.getElementById('articleBreakingBadge').style.display = 'inline-flex';

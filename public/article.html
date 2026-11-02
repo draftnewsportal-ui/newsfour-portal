@@ -76,18 +76,28 @@
             <div class="author-avatar" id="authorInitials">N4</div>
             <div>
               <div style="font-weight:700; color:#0f172a;" id="articleAuthor">Reporter</div>
-              <div style="color:var(--text-muted); font-size:0.8rem;">
-                Published: <span id="articleDate">Today</span> • <span id="articleViews">0</span> Views
+              <div style="color:var(--text-muted); font-size:0.82rem; display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:3px;">
+                <span><i class="fa-regular fa-calendar-check" style="color:var(--primary-red); margin-right:4px;"></i> <span id="articleDate">Today</span></span>
+                <span style="color:#cbd5e1;">•</span>
+                <span style="background:#f1f5f9; color:#0f172a; padding:0.15rem 0.55rem; border-radius:12px; font-weight:700; font-size:0.78rem; display:inline-flex; align-items:center; gap:5px; border:1px solid #e2e8f0;">
+                  <i class="fa-regular fa-eye" style="color:var(--primary-red);"></i> <span id="articleViews">0</span> Reads
+                </span>
               </div>
             </div>
           </div>
         </header>
 
-        <!-- Reader Toolbar: Reading Time & Font Resizer -->
+        <!-- Reader Toolbar: Reading Time, Live Readers Counter & Font Resizer -->
         <div class="reader-toolbar">
-          <div class="reading-time-pill">
-            <i class="fa-regular fa-clock" style="color:var(--primary-red);"></i>
-            <span id="readingTime">2 മിനിറ്റ് വായന</span>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="reading-time-pill">
+              <i class="fa-regular fa-clock" style="color:var(--primary-red);"></i>
+              <span id="readingTime">2 മിനിറ്റ് വായന</span>
+            </div>
+            <div class="reading-time-pill" style="color:#0f172a;">
+              <i class="fa-solid fa-users" style="color:#0284c7;"></i>
+              <span id="articleReadersText"><strong id="articleViewsToolbar">0</strong> വായനക്കാർ</span>
+            </div>
           </div>
           <div class="font-resizer-wrap">
             <span class="font-label">അക്ഷര വലിപ്പം:</span>
