@@ -1,0 +1,34 @@
+{
+  "portalName": "NEWSഫോർ",
+  "tagline": "THE PEOPLE'S NEWSROOM",
+  "location": "സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ",
+  "description": "സ്വതന്ത്രവും നിഷ്പക്ഷവുമായ ജനകീയ മാധ്യമപ്രവർത്തനം. വാർത്തകൾ വേഗത്തിലും കൃത്യതയിലും ജനങ്ങളിലേക്ക് എത്തിക്കുന്നു.",
+  "contactEmail": "draftnewsportal@gmail.com",
+  "contactPhone": "+91 4862 224 444",
+  "breakingNews": {
+    "enabled": true,
+    "items": [
+      {
+        "id": "brk-1",
+        "text": "പെരുമ്പാവൂരിൽ വാക്കുതർക്കം: മൂന്നു പേര്‍ക്ക് കുത്തേറ്റു; അസം സ്വദേശികളായ നാലുപേർ അറസ്റ്റിൽ",
+        "link": "/article.html?id=art-002"
+      },
+      {
+        "id": "brk-2",
+        "text": "കൊച്ചി മെട്രോ രണ്ടാം ഘട്ട നിർമ്മാണത്തിന് തുടക്കമായി; കാക്കനാട് റൂട്ടിൽ സർവീസ് 2027 ഓടെ",
+        "link": "/article.html?id=art-001"
+      },
+      {
+        "id": "brk-3",
+        "text": "സന്തോഷ് ട്രോഫി: കേരളം സെമി ഫൈനലിൽ; അവസാന നിമിഷം നേടിയ ഗോളിൽ ആവേശ വിജയം",
+        "link": "/article.html?id=art-003"
+      }
+    ],
+    "updatedAt": "2026-10-24T16:53:22.059Z"
+  },
+  "featuredStories": {
+    "topId": "art-7b32ebe3",
+    "bottomLeftId": "art-001",
+    "bottomRightId": "art-003"
+  }
+}

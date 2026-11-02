@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMS Login | NEWSFOUR Editorial Desk</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-red: #B30000;
+      --dark-red: #8B0000;
+      --golden-yellow: #FFC400;
+      --bright-yellow: #FFD700;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(179, 0, 0, 0.18) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255, 196, 0, 0.08) 0%, transparent 40%);
+    }
+
+    .login-card {
+      background: #ffffff;
+      color: #1e293b;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 16px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 196, 0, 0.2);
+      overflow: hidden;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+      padding: 2.25rem 2rem 1.85rem;
+      text-align: center;
+      position: relative;
+      border-bottom: 3px solid var(--golden-yellow);
+    }
+
+    .brand-logo {
+      height: 60px;
+      margin-bottom: 0.85rem;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+    .brand-title .four {
+      color: var(--golden-yellow);
+    }
+
+    .brand-tagline {
+      font-size: 0.72rem;
+      color: #fef08a;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-top: 5px;
+    }
+
+    .cms-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--golden-yellow);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-top: 1rem;
+    }
+
+    .card-body {
+      padding: 2rem 2rem 2.25rem;
+    }
+
+    .auth-notice {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.5rem;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      color: #991b1b;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #334155;
+      margin-bottom: 0.5rem;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-input {
+      width: 100%;
+      padding: 0.85rem 3rem 0.85rem 1.1rem;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .password-input:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 0 3px rgba(179, 0, 0, 0.15);
+    }
+
+    .eye-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .eye-btn:hover {
+      color: var(--primary-red);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--primary-red);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.95rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      border: 1px solid var(--golden-yellow);
+      box-shadow: 0 4px 14px rgba(179, 0, 0, 0.35);
+    }
+
+    .btn-login:hover {
+      background: var(--dark-red);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(179, 0, 0, 0.45);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .help-hint {
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #64748b;
+      text-align: center;
+      line-height: 1.5;
+      background: #f8fafc;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .help-hint strong {
+      color: var(--dark-red);
+      font-family: monospace;
+      background: #fee2e2;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .footer-link {
+      margin-top: 1.75rem;
+      text-align: center;
+    }
+
+    .footer-link a {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .footer-link a:hover {
+      color: var(--golden-yellow);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="card-header">
+      <img src="/images/logo.png" alt="NEWSFOUR Logo" class="brand-logo">
+      <div class="brand-title">NEWS<span class="four">FOUR</span></div>
+      <div class="brand-tagline">THE PEOPLE'S NEWSROOM</div>
+      <div class="cms-badge">
+        <i class="fa-solid fa-shield-halved" style="color:var(--bright-yellow);"></i>
+        Editorial Desk CMS
+      </div>
+    </div>
+
+    <div class="card-body">
+      <!-- Error notice -->
+      <div id="errorNotice" class="auth-notice">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="errorMsg">Incorrect password. Please try again.</span>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="cmsPassword">
+            <i class="fa-solid fa-lock" style="color:var(--primary-red); margin-right:4px;"></i>
+            Enter Editorial Password
+          </label>
+          <div class="password-wrap">
+            <input 
+              type="password" 
+              id="cmsPassword" 
+              class="password-input" 
+              placeholder="Enter your CMS password..."
+              required 
+              autocomplete="current-password"
+              autofocus
+            >
+            <button type="button" class="eye-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">
+              <i id="eyeIcon" class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-login">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          SIGN IN TO CMS
+        </button>
+      </form>
+
+      <div class="help-hint">
+        <i class="fa-solid fa-key" style="color:var(--primary-red); margin-right:3px;"></i>
+        Default CMS Password: <strong>newsfour2026</strong><br>
+        (You can update this password inside the editorial desk).
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-link">
+    <a href="/"><i class="fa-solid fa-arrow-left"></i> Return to Live News Portal</a>
+  </div>
+
+  <script>
+    // If already logged in, redirect straight to admin.html
+    (async function checkExistingAuth() {
+      try {
+        const token = localStorage.getItem('cms_token');
+        const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+        const res = await fetch('/api/auth/check', { headers });
+        const data = await res.json();
+        if (data.authenticated) {
+          window.location.replace('/admin.html');
+        }
+      } catch (err) {
+        // Continue showing login
+      }
+    })();
+
+    function togglePasswordVisibility() {
+      const pwd = document.getElementById('cmsPassword');
+      const icon = document.getElementById('eyeIcon');
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+      } else {
+        pwd.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const pwdInput = document.getElementById('cmsPassword');
+      const btn = document.getElementById('submitBtn');
+      const errorNotice = document.getElementById('errorNotice');
+      const errorMsg = document.getElementById('errorMsg');
+
+      const password = pwdInput.value.trim();
+      if (!password) return;
+
+      errorNotice.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (data.token) {
+            localStorage.setItem('cms_token', data.token);
+          }
+          btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> Success! Redirecting...';
+          btn.style.background = '#16a34a';
+          setTimeout(() => {
+            window.location.replace('/admin.html');
+          }, 350);
+        } else {
+          errorMsg.textContent = data.error || 'Incorrect password. Please try again.';
+          errorNotice.style.display = 'flex';
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> SIGN IN TO CMS';
+          pwdInput.focus();
+          pwdInput.select();
+        }
+      } catch (err) {
+        errorMsg.textContent = 'Server connection failed. Please ensure newsroom server is running.';
+        errorNotice.style.display = 'flex';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> SIGN IN TO CMS';
+      }
+    }
+  </script>
+</body>
+</html>

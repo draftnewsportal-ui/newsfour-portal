@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWSFOUR • NEWSഫോർ | The People's Newsroom</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+</head>
+<body>
+
+  <!-- 🚨 LIVE BREAKING NEWS TICKER -->
+  <div id="breakingBar" class="breaking-bar hidden">
+    <div class="breaking-badge">
+      <span class="pulse-dot"></span>
+      <i class="fa-solid fa-bolt" style="color:#fbbf24;"></i>
+      <span class="badge-label-long">BREAKING NEWS</span>
+      <span class="badge-label-short">BREAKING</span>
+    </div>
+    <div class="ticker-track-wrap">
+      <div id="breakingTrack" class="ticker-infinite-track">
+        <div id="breakingGroup1" class="ticker-group"></div>
+        <div id="breakingGroup2" class="ticker-group" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP UTILITY BAR -->
+  <div class="top-utility">
+    <div class="top-utility-inner" style="justify-content:center;">
+      <div id="currentDate">ഞായറാഴ്ച, 25 ഒക്ടോബർ 2026 • ഡിജിറ്റൽ എഡിഷൻ</div>
+    </div>
+  </div>
+
+  <!-- MASTHEAD WITH LOGO & TEXT "NEWSFOUR" -->
+  <header class="masthead">
+    <div class="masthead-inner">
+      <a href="/" class="masthead-brand" title="NEWSFOUR | The People's Newsroom">
+        <img src="/images/logo.png" alt="NEWSFOUR Logo" class="portal-logo">
+        <div class="brand-text-wrap">
+          <div class="brand-title">
+            <span class="title-news">NEWS</span><span class="title-four">FOUR</span>
+          </div>
+          <p class="portal-tagline" id="mastheadTagline">THE PEOPLE'S NEWSROOM</p>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <!-- CATEGORY NAVIGATION & SEARCH -->
+  <nav class="nav-bar">
+    <div class="nav-inner">
+      <ul class="category-list" id="categoryTabs">
+        <li class="category-tab active" data-category="All">ALL</li>
+        <li class="category-tab" data-category="KERALA">KERALA</li>
+        <li class="category-tab" data-category="CRIME">CRIME</li>
+        <li class="category-tab" data-category="SPORTS">SPORTS</li>
+        <li class="category-tab" data-category="BUSINESS">BUSINESS</li>
+        <li class="category-tab" data-category="ENTERTAINMENT">ENTERTAINMENT</li>
+        <li class="category-tab" data-category="GULF">GULF / NRI</li>
+        <li class="category-tab" data-category="NATIONAL">NATIONAL</li>
+      </ul>
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass text-muted"></i>
+        <input type="text" id="searchInput" placeholder="Search news...">
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN NEWS PORTAL CONTENT -->
+  <main class="site-container">
+    
+    <!-- HERO SECTION: 1 TOP + 2 BOTTOM FEATURED STORIES -->
+    <section class="hero-trio-container" id="leadSection">
+      <!-- 1 Top Main Story + 2 Bottom Stories injected dynamically -->
+    </section>
+
+    <!-- SECTION: MORE STORIES GRID -->
+    <section>
+      <div class="section-header">
+        <h2 class="section-title" id="gridSectionTitle">LATEST NEWS</h2>
+        <span id="storyCountText" style="font-size:0.85rem; color:var(--text-muted);"></span>
+      </div>
+
+      <div class="stories-grid" id="storiesGrid">
+        <!-- Cards injected dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-wrap" style="display:flex; align-items:center; gap:12px; margin-bottom:0.85rem;">
+          <img src="/images/logo.png" alt="NEWSFOUR" style="height:46px; object-fit:contain; border-radius:4px;">
+          <div>
+            <div class="footer-brand-title">
+              <span class="footer-title-news">NEWS</span><span class="footer-title-four">FOUR</span>
+            </div>
+            <div class="footer-tagline">THE PEOPLE'S NEWSROOM</div>
+          </div>
+        </div>
+        <p id="footerDescription" style="margin-bottom:1rem; color:#cbd5e1; font-size:0.95rem; line-height:1.6;">സ്വതന്ത്രവും നിഷ്പക്ഷവുമായ ജനകീയ മാധ്യമപ്രവർത്തനം. വാർത്തകൾ വേഗത്തിലും കൃത്യതയിലും ജനങ്ങളിലേക്ക് എത്തിക്കുന്നു.</p>
+        <p id="footerLocation" style="color:#94a3b8;"><i class="fa-solid fa-location-dot" style="color:#FFC400; margin-right:6px;"></i> സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ</p>
+      </div>
+      <div>
+        <h4 style="color:#ffffff; margin-bottom:0.75rem; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; border-bottom:1.5px solid #FFC400; padding-bottom:4px; display:inline-block;">CATEGORIES</h4>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('KERALA')">KERALA</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('CRIME')">CRIME & SAFETY</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('SPORTS')">SPORTS</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('BUSINESS')">BUSINESS & MARKET</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('ENTERTAINMENT')">ENTERTAINMENT & CINEMA</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="#category" onclick="filterByCat('GULF')">GULF & NRI</a></p>
+      </div>
+      <div>
+        <h4 style="color:#ffffff; margin-bottom:0.75rem; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; border-bottom:1.5px solid #FFC400; padding-bottom:4px; display:inline-block;">CONTACT US</h4>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-envelope" style="color:#FFC400; margin-right:6px;"></i> <a id="footerContactEmail" href="mailto:draftnewsportal@gmail.com" style="color:#cbd5e1; text-decoration:none;">draftnewsportal@gmail.com</a></p>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-phone" style="color:#FFC400; margin-right:6px;"></i> <span id="footerContactPhone">+91 4862 224 444</span></p>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-bullhorn" style="color:#FFC400; margin-right:6px;"></i> 24x7 സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ</p>
+        <p style="margin-top:0.75rem; font-size:0.82rem; color:#94a3b8;">വാർത്തകളും വിവരങ്ങളും ഞങ്ങളുടെ ന്യൂസ്ഡെസ്കിലേക്ക് അറിയിക്കുക.</p>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2026 NEWSFOUR • NEWSഫോർ • THE PEOPLE'S NEWSROOM. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

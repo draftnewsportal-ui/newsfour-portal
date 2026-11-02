@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWSFOUR • NEWSഫോർ | Editorial Desk</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+  <script>
+    // Instant client-side auth guard
+    (async function checkAuth() {
+      try {
+        const token = localStorage.getItem('cms_token');
+        const headers = token ? { 'Authorization': 'Bearer ' + token } : {};
+        const res = await fetch('/api/auth/check', { headers });
+        const data = await res.json();
+        if (!data.authenticated) {
+          window.location.replace('/login.html');
+        }
+      } catch (e) {
+        window.location.replace('/login.html');
+      }
+    })();
+  </script>
+  <style>
+    /* Admin Specific Styling */
+    body {
+      background-color: #f4f6f8;
+    }
+    .admin-navbar {
+      background: #000000;
+      border-bottom: 3px solid #B30000;
+      color: #ffffff;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .admin-navbar-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .admin-card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+      margin-bottom: 2rem;
+      border: 1px solid #e5e7eb;
+    }
+    .admin-card-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-card-desc {
+      color: #6b7280;
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 0.4rem;
+      color: #374151;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #d1d5db;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    .form-title-input {
+      font-size: 1.35rem;
+      font-weight: 700;
+      padding: 0.85rem 1rem;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 640px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .editor-toolbar {
+      display: flex;
+      gap: 6px;
+      background: #f8fafc;
+      padding: 0.5rem;
+      border: 1.5px solid #d1d5db;
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      flex-wrap: wrap;
+    }
+    .tool-btn {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: #475569;
+    }
+    .tool-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .form-textarea.in-editor {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      min-height: 220px;
+      line-height: 1.6;
+    }
+    .checkbox-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f9fafb;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkbox-badge input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    .btn-publish {
+      background: #16a34a;
+      color: #ffffff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      border: none;
+      border-radius: 8px;
+      padding: 0.9rem 2rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    }
+    .btn-publish:hover {
+      background: #15803d;
+      transform: translateY(-1px);
+    }
+    .btn-alert-save {
+      background: #dc2626;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 0.6rem 1.25rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-alert-save:hover {
+      background: #b91c1c;
+    }
+    .image-preview-box {
+      margin-top: 0.75rem;
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .image-preview-box img {
+      max-height: 180px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      display: block;
+    }
+    .quick-photos {
+      display: flex;
+      gap: 8px;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .quick-photo-tag {
+      font-size: 0.75rem;
+      background: #f1f5f9;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #cbd5e1;
+    }
+    .quick-photo-tag:hover {
+      background: #e2e8f0;
+    }
+    .stat-pill {
+      background: #f3f4f6;
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .stat-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #111827;
+    }
+    .stat-lbl {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .alert-banner {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .alert-banner.success {
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      color: #166534;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="admin-navbar">
+    <div class="admin-navbar-title">
+      <img src="/images/logo.png" alt="NEWSFOUR Logo" style="height:38px; border-radius:4px; object-fit:contain;">
+      <span style="font-weight:900; letter-spacing:-0.01em; display:flex; align-items:baseline; gap:1px;">
+        <span style="color:#ffffff;">NEWS</span><span style="color:#FFC400;">FOUR</span>
+      </span>
+      <span style="font-size:0.85rem; color:#9ca3af; font-weight:600; margin-left:6px;">• Editorial Desk</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+      <a href="/" target="_blank" style="background:#B30000; color:#fff; padding:0.45rem 1rem; border-radius:6px; font-size:0.85rem; font-weight:700; display:inline-flex; align-items:center; gap:6px; border:1px solid #FFC400; text-decoration:none;">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> View Portal
+      </a>
+      <button type="button" onclick="openPasswordModal()" style="background:#1e293b; color:#f8fafc; padding:0.45rem 0.9rem; border-radius:6px; font-size:0.85rem; font-weight:700; border:1px solid #475569; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-key" style="color:#FFC400;"></i> Change Password
+      </button>
+      <button type="button" onclick="handleLogout()" style="background:#dc2626; color:#fff; padding:0.45rem 0.9rem; border-radius:6px; font-size:0.85rem; font-weight:700; border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+    </div>
+  </nav>
+
+  <div class="site-container" style="margin-top:1.5rem; max-width:1040px;">
+
+    <!-- NOTIFICATION ALERT BANNER -->
+    <div id="noticeBanner" class="alert-banner success" style="display:none;">
+      <span id="noticeText">Article published successfully!</span>
+      <a id="noticeLink" href="#" target="_blank" style="font-weight:700; text-decoration:underline;">View Live Story &rarr;</a>
+    </div>
+
+    <!-- MOBILE / TABLET WI-FI ACCESS BANNER -->
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:0.9rem 1.25rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <div style="background:#3b82f6; color:#fff; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+        </div>
+        <div>
+          <div style="font-weight:700; color:#1e40af; font-size:0.95rem;">Connect from your Mobile Phone or Tablet (Same Wi-Fi)</div>
+          <div style="font-size:0.85rem; color:#1d4ed8;">Open in mobile browser: <strong style="font-family:monospace; background:#dbeafe; padding:2px 6px; border-radius:4px; font-size:0.95rem;">http://192.168.1.7:3000</strong></div>
+        </div>
+      </div>
+      <div>
+        <button type="button" onclick="toggleQrCode()" style="background:#2563eb; color:#fff; border:none; padding:0.45rem 0.9rem; border-radius:6px; font-size:0.82rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-qrcode"></i> Show Phone QR Code
+        </button>
+      </div>
+      <div id="qrModalBox" style="display:none; width:100%; text-align:center; padding-top:1rem; border-top:1px dashed #bfdbfe;">
+        <p style="font-size:0.85rem; color:#1e40af; margin-bottom:0.5rem; font-weight:600;">Point your phone's camera at this QR code to open your news website:</p>
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=http://192.168.1.7:3000" alt="Mobile QR Code" style="border:3px solid #ffffff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+      </div>
+    </div>
+
+    <!-- QUICK NEWSROOM STATS -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:1.5rem;">
+      <div class="stat-pill">
+        <div class="stat-val" id="statTotalStories">5</div>
+        <div class="stat-lbl">Published Stories</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val" id="statTotalViews">6,100</div>
+        <div class="stat-lbl">Reader Views</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-val" style="color:#dc2626;" id="statBreakingStatus">ACTIVE</div>
+        <div class="stat-lbl">Top Breaking Banner</div>
+      </div>
+    </div>
+
+    <!-- CARD 1: 🚨 INSTANT BREAKING NEWS CONTROLLER -->
+    <section class="admin-card">
+      <div class="admin-card-title">
+        <i class="fa-solid fa-bolt" style="color:#dc2626;"></i>
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:0.75rem;">
+        <div class="admin-card-title" style="margin-bottom:0;">
+          <i class="fa-solid fa-bolt" style="color:#dc2626;"></i>
+          <span>Breaking News Multi-Ticker Controller</span>
+        </div>
+        <label class="checkbox-badge" style="padding:0.4rem 0.85rem; margin:0;">
+          <input type="checkbox" id="alertEnabledCheckbox" checked onchange="saveBreakingAlert()">
+          <span style="font-weight:700; font-size:0.88rem;">Ticker Status: <span id="tickerStatusLabel" style="color:#dc2626;">LIVE</span></span>
+        </label>
+      </div>
+      <p class="admin-card-desc">
+        Add multiple breaking news headlines to scroll across the top bar. Readers can click each headline to read the full story.
+      </p>
+
+      <!-- Active Breaking Items List -->
+      <div style="margin-bottom:1.5rem;">
+        <label class="form-label">Active Breaking News Items (Continuous Scrolling Strip)</label>
+        <div id="breakingItemsContainer" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Items injected dynamically -->
+        </div>
+      </div>
+
+      <!-- Add New Breaking Alert Form -->
+      <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:1.25rem;">
+        <div style="font-weight:800; font-size:0.95rem; color:#991b1b; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+          <i class="fa-solid fa-plus-circle"></i> Add New Headline to Breaking Strip
+        </div>
+        <div style="display:grid; grid-template-columns: 2fr 1fr auto; gap:10px; align-items:flex-end;">
+          <div>
+            <label class="form-label" style="font-size:0.8rem; color:#991b1b;">Headline Text</label>
+            <input type="text" id="newBreakingTextInput" class="form-input" placeholder="Type breaking headline (e.g. കൊച്ചിയിൽ പുതിയ മെട്രോ പാത...)">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:0.8rem; color:#991b1b;">Link To Story (Optional)</label>
+            <select id="newBreakingStorySelect" class="form-select">
+              <option value="">-- Choose Story To Link --</option>
+              <!-- Populated dynamically with published articles -->
+            </select>
+          </div>
+          <button type="button" class="btn-alert-save" onclick="addBreakingItem()" style="height:44px; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-plus"></i> Add
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARD 2: 📌 CHOOSE FRONT PAGE TOP 3 STORIES (1 TOP + 2 BOTTOM) -->
+    <section class="admin-card" style="border: 2px solid #B30000;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:0.5rem;">
+        <div class="admin-card-title" style="margin-bottom:0;">
+          <i class="fa-solid fa-layer-group" style="color:#B30000;"></i>
+          <span>Front Page Top 3 Stories (1 Top, 2 Bottom)</span>
+        </div>
+        <span style="background:#fef2f2; color:#B30000; font-weight:800; font-size:0.75rem; padding:3px 8px; border-radius:4px; border:1px solid #fecaca;">
+          <i class="fa-solid fa-mobile-screen"></i> Mobile & Desktop First View
+        </span>
+      </div>
+      <p class="admin-card-desc">
+        Select which 3 published stories appear at the very top of your portal: <strong>1 wide main story on top</strong>, and <strong>2 stories side-by-side underneath</strong>.
+      </p>
+
+      <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:1.25rem; margin-bottom:1.25rem;">
+        <!-- Top Story Selector -->
+        <div class="form-group">
+          <label class="form-label" style="color:#8B0000; font-size:0.92rem; font-weight:800;">
+            <i class="fa-solid fa-crown" style="color:#FFC400; margin-right:4px;"></i> 1. Top Main Story (Wide Box on Top)
+          </label>
+          <select id="selectFeaturedTop" class="form-select" onchange="updateFeaturedPreview()" style="font-weight:700; border-color:#B30000;">
+            <option value="">-- Choose Top Story --</option>
+          </select>
+        </div>
+
+        <!-- Bottom Two Stories Selectors -->
+        <div class="form-grid-2">
+          <div class="form-group" style="margin-bottom:0.5rem;">
+            <label class="form-label" style="color:#8B0000; font-size:0.88rem; font-weight:700;">
+              <i class="fa-solid fa-table-columns" style="color:#B30000; margin-right:4px;"></i> 2. Bottom-Left Story (Box 2)
+            </label>
+            <select id="selectFeaturedBottomLeft" class="form-select" onchange="updateFeaturedPreview()">
+              <option value="">-- Choose Bottom Left Story --</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom:0.5rem;">
+            <label class="form-label" style="color:#8B0000; font-size:0.88rem; font-weight:700;">
+              <i class="fa-solid fa-table-columns" style="color:#B30000; margin-right:4px;"></i> 3. Bottom-Right Story (Box 3)
+            </label>
+            <select id="selectFeaturedBottomRight" class="form-select" onchange="updateFeaturedPreview()">
+              <option value="">-- Choose Bottom Right Story --</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; flex-wrap:wrap; gap:10px; border-top:1px dashed #fca5a5; padding-top:0.85rem;">
+          <span id="featuredSaveStatus" style="font-size:0.85rem; color:#6b7280;">Click below to save these 3 stories to the front page.</span>
+          <button type="button" class="btn-publish" onclick="saveFeaturedTopStories()" style="background:#B30000; padding:0.65rem 1.6rem; font-size:0.95rem; border:1px solid #FFC400;">
+            <i class="fa-solid fa-floppy-disk"></i> SAVE TOP 3 STORIES
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Visual Layout Preview -->
+      <div>
+        <div style="font-weight:800; font-size:0.85rem; color:#374151; margin-bottom:0.4rem;">
+          <i class="fa-solid fa-eye" style="color:#6b7280;"></i> Live Layout Preview:
+        </div>
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:0.85rem;">
+          <div id="previewTopBox" style="background:#ffffff; border:1.5px solid #B30000; border-radius:6px; padding:0.65rem 0.85rem; margin-bottom:8px; font-weight:700; color:#111827; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+            1. Top Main Story: Loading...
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div id="previewBottomLeftBox" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:600; color:#374151;">
+              2. Bottom Left Story: Loading...
+            </div>
+            <div id="previewBottomRightBox" style="background:#ffffff; border:1px solid #cbd5e1; border-radius:6px; padding:0.5rem 0.75rem; font-size:0.85rem; font-weight:600; color:#374151;">
+              3. Bottom Right Story: Loading...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARD: 📍 BUREAU & CONTACT SETTINGS -->
+    <section class="admin-card" style="border-left: 4px solid #B30000;">
+      <div class="admin-card-title">
+        <i class="fa-solid fa-address-book" style="color:#B30000;"></i>
+        <span>Newsroom Contact & Bureau Settings</span>
+      </div>
+      <p class="admin-card-desc">
+        Update your official newsroom location, contact email, and phone number displayed on the website.
+      </p>
+
+      <form id="contactSettingsForm" onsubmit="handleSaveContactSettings(event)">
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-location-dot" style="color:#B30000; margin-right:4px;"></i> Bureau Location (Malayalam)</label>
+            <input type="text" id="settingLocation" class="form-input" value="സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-envelope" style="color:#B30000; margin-right:4px;"></i> Editorial Contact Email</label>
+            <input type="email" id="settingContactEmail" class="form-input" value="draftnewsportal@gmail.com" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-phone" style="color:#B30000; margin-right:4px;"></i> Bureau Phone Number</label>
+            <input type="text" id="settingContactPhone" class="form-input" value="+91 4862 224 444">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fa-solid fa-circle-info" style="color:#B30000; margin-right:4px;"></i> Footer Description (Malayalam)</label>
+            <input type="text" id="settingDescription" class="form-input" value="സ്വതന്ത്രവും നിഷ്പക്ഷവുമായ ജനകീയ മാധ്യമപ്രവർത്തനം. വാർത്തകൾ വേഗത്തിലും കൃത്യതയിലും ജനങ്ങളിലേക്ക് എത്തിക്കുന്നു.">
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.75rem;">
+          <span id="contactSettingsSaveStatus" style="font-size:0.85rem; color:#6b7280;"></span>
+          <button type="submit" class="btn-publish" style="background:#B30000; padding:0.6rem 1.4rem; font-size:0.92rem; border:1px solid #FFC400;">
+            <i class="fa-solid fa-floppy-disk"></i> SAVE CONTACT & LOCATION
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- CARD 3: ✍️ POST & PUBLISH A STORY -->
+    <section class="admin-card">
+      <div class="admin-card-title">
+        <i class="fa-solid fa-feather-pointed" style="color:#2563eb;"></i>
+        <span>Write & Publish Story</span>
+      </div>
+      <p class="admin-card-desc">
+        Just enter your headline, choose a category, write your story, and hit Publish.
+      </p>
+
+      <form id="publishForm" onsubmit="handlePublishStory(event)">
+        <!-- 1. Headline -->
+        <div class="form-group">
+          <label class="form-label">Headline / Title <span style="color:red;">*</span></label>
+          <input type="text" id="storyTitle" class="form-input form-title-input" placeholder="Type your story headline here..." required>
+        </div>
+
+        <!-- 2. Category & Author -->
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select id="storyCategory" class="form-select">
+              <option value="KERALA">KERALA</option>
+              <option value="CRIME">CRIME</option>
+              <option value="SPORTS">SPORTS</option>
+              <option value="BUSINESS">BUSINESS</option>
+              <option value="ENTERTAINMENT">ENTERTAINMENT</option>
+              <option value="GULF">GULF / NRI</option>
+              <option value="NATIONAL">NATIONAL</option>
+              <option value="TECH">TECHNOLOGY</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Reporter / Byline</label>
+            <input type="text" id="storyAuthor" class="form-input" value="ആഷിഖ് / റിപ്പോർട്ടർ">
+          </div>
+        </div>
+
+        <!-- 3. Lead Photo -->
+        <div class="form-group">
+          <label class="form-label">Lead Photo</label>
+          <div style="display:flex; gap:10px; margin-bottom:0.5rem; flex-wrap:wrap;">
+            <input type="text" id="storyImageUrl" class="form-input" placeholder="Paste image web link or choose a photo below..." style="flex:1; min-width:260px;" oninput="updateImagePreview()">
+            <label style="background:#e5e7eb; padding:0.75rem 1rem; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+              <i class="fa-solid fa-upload"></i> Upload From PC
+              <input type="file" id="fileUploadInput" accept="image/*" style="display:none;" onchange="handleFileUpload(event)">
+            </label>
+          </div>
+
+          <!-- Quick Stock Photos -->
+          <div class="quick-photos">
+            <span style="font-size:0.75rem; color:#6b7280; align-self:center;">Quick photo presets:</span>
+            <span class="quick-photo-tag" onclick="setPresetPhoto('https://images.unsplash.com/photo-1477959858617-67f30bc75b82?auto=format&fit=crop&w=1000&q=80')">🏙️ City Hall</span>
+            <span class="quick-photo-tag" onclick="setPresetPhoto('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1000&q=80')">⚖️ Court/Legal</span>
+            <span class="quick-photo-tag" onclick="setPresetPhoto('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=1000&q=80')">⚽ Sports</span>
+            <span class="quick-photo-tag" onclick="setPresetPhoto('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80')">🚌 Transit/Roads</span>
+            <span class="quick-photo-tag" onclick="setPresetPhoto('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1000&q=80')">💼 Business</span>
+          </div>
+
+          <!-- Image Preview -->
+          <div id="imagePreviewBox" class="image-preview-box" style="display:none;">
+            <img id="previewImg" src="" alt="Preview">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo Caption / Credit (Optional)</label>
+          <input type="text" id="storyImageCaption" class="form-input" placeholder="e.g. City council meeting inside Municipal Chambers on Friday.">
+        </div>
+
+        <!-- 4. Story Urgency Flags -->
+        <div class="form-grid-2" style="margin-bottom:1.5rem;">
+          <label class="checkbox-badge">
+            <input type="checkbox" id="storyIsBreaking">
+            <div>
+              <div style="font-weight:700; color:#dc2626;"><i class="fa-solid fa-bolt"></i> Mark as Breaking News</div>
+              <div style="font-size:0.75rem; color:#6b7280;">Updates top red ticker banner automatically</div>
+            </div>
+          </label>
+
+          <label class="checkbox-badge">
+            <input type="checkbox" id="storyIsLead" checked>
+            <div>
+              <div style="font-weight:700; color:#111827;"><i class="fa-solid fa-star"></i> Pin as Lead Top Story</div>
+              <div style="font-size:0.75rem; color:#6b7280;">Showcases story at the top of the homepage</div>
+            </div>
+          </label>
+        </div>
+
+        <!-- 5. Story Body Editor -->
+        <div class="form-group">
+          <label class="form-label">Story Text / Article Body <span style="color:red;">*</span></label>
+          
+          <div class="editor-toolbar">
+            <button type="button" class="tool-btn" onclick="insertFormat('**', '**')"><b>B</b> Bold</button>
+            <button type="button" class="tool-btn" onclick="insertFormat('*', '*')"><i>I</i> Italic</button>
+            <button type="button" class="tool-btn" onclick="insertFormat('### ', '')">H3 Subheading</button>
+            <button type="button" class="tool-btn" onclick="insertFormat('> ', '')">&ldquo; Quote</button>
+            <button type="button" class="tool-btn" onclick="insertFormat('- ', '')">&bull; Bullet</button>
+          </div>
+
+          <textarea id="storyContent" class="form-textarea in-editor" placeholder="Write or paste your article here...
+Press Enter for new paragraphs.
+You can use the buttons above to add quotes or subheadings." required></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding-top:1rem; border-top:1px solid #e5e7eb;">
+          <span style="font-size:0.85rem; color:#6b7280;">Ready to go live? No extra steps required.</span>
+          <button type="submit" class="btn-publish" id="publishBtn">
+            <i class="fa-solid fa-paper-plane"></i> POST & PUBLISH NOW
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- CARD 3: 📋 MANAGE PUBLISHED STORIES -->
+    <section class="admin-card">
+      <div class="admin-card-title">
+        <i class="fa-solid fa-list-check" style="color:#059669;"></i>
+        <span>All Published Stories</span>
+      </div>
+      <p class="admin-card-desc">
+        View or delete existing stories from your portal.
+      </p>
+
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;" id="articlesTable">
+          <thead>
+            <tr style="border-bottom:2px solid #e5e7eb; text-align:left; color:#4b5563;">
+              <th style="padding:0.75rem 0.5rem;">Headline</th>
+              <th style="padding:0.75rem 0.5rem;">Category</th>
+              <th style="padding:0.75rem 0.5rem;">Published</th>
+              <th style="padding:0.75rem 0.5rem;">Reads</th>
+              <th style="padding:0.75rem 0.5rem; text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="articlesTableBody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  <!-- CHANGE CMS PASSWORD MODAL -->
+  <div id="passwordModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:9999; align-items:center; justify-content:center; padding:1rem;">
+    <div style="background:#ffffff; max-width:420px; width:100%; border-radius:12px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.3); border:2px solid #FFC400;">
+      <div style="background:#B30000; color:#fff; padding:1.15rem 1.25rem; display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800; font-size:1.05rem; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-key" style="color:#FFC400;"></i> Change CMS Password
+        </div>
+        <button type="button" onclick="closePasswordModal()" style="background:none; border:none; color:#fff; font-size:1.25rem; cursor:pointer;">&times;</button>
+      </div>
+      <form id="changePasswordForm" onsubmit="handleChangePassword(event)" style="padding:1.5rem;">
+        <div id="modalNotice" style="display:none; padding:0.65rem 0.85rem; border-radius:6px; margin-bottom:1rem; font-size:0.85rem; font-weight:600;"></div>
+        
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label class="form-label" style="font-size:0.85rem;">Current Password</label>
+          <input type="password" id="modalCurrentPassword" class="form-input" placeholder="Enter current password" required>
+        </div>
+        
+        <div class="form-group" style="margin-bottom:1.25rem;">
+          <label class="form-label" style="font-size:0.85rem;">New Password (Min 4 chars)</label>
+          <input type="password" id="modalNewPassword" class="form-input" placeholder="Enter new strong password" required minlength="4">
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+          <button type="button" onclick="closePasswordModal()" style="padding:0.6rem 1rem; border-radius:6px; border:1px solid #cbd5e1; background:#f1f5f9; font-weight:700; cursor:pointer;">Cancel</button>
+          <button type="submit" id="modalSaveBtn" style="padding:0.6rem 1.25rem; border-radius:6px; border:none; background:#B30000; color:#fff; font-weight:800; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-check"></i> Update Password
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEWSFOUR • NEWSഫോർ | The People's Newsroom</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/images/logo.png">
+</head>
+<body>
+
+  <!-- 🚨 LIVE BREAKING NEWS TICKER -->
+  <div id="breakingBar" class="breaking-bar hidden">
+    <div class="breaking-badge">
+      <span class="pulse-dot"></span>
+      <i class="fa-solid fa-bolt" style="color:#fbbf24;"></i>
+      <span class="badge-label-long">BREAKING NEWS</span>
+      <span class="badge-label-short">BREAKING</span>
+    </div>
+    <div class="ticker-track-wrap">
+      <div id="breakingTrack" class="ticker-infinite-track">
+        <div id="breakingGroup1" class="ticker-group"></div>
+        <div id="breakingGroup2" class="ticker-group" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP UTILITY BAR -->
+  <div class="top-utility">
+    <div class="top-utility-inner">
+      <div>
+        <a href="/" style="font-weight:700;"><i class="fa-solid fa-arrow-left"></i> Home</a>
+      </div>
+      <div id="currentDate" style="font-size:0.85rem; color:#cbd5e1;">ഞായറാഴ്ച, 25 ഒക്ടോബർ 2026 • ഡിജിറ്റൽ എഡിഷൻ</div>
+    </div>
+  </div>
+
+  <!-- MASTHEAD COMPACT WITH LOGO & NEWSFOUR TEXT -->
+  <header class="masthead masthead-compact">
+    <div class="masthead-inner">
+      <a href="/" class="masthead-brand" title="NEWSFOUR | The People's Newsroom">
+        <img src="/images/logo.png" alt="NEWSFOUR Logo" class="portal-logo">
+        <div class="brand-text-wrap">
+          <div class="brand-title">
+            <span class="title-news">NEWS</span><span class="title-four">FOUR</span>
+          </div>
+          <p class="portal-tagline" style="font-size:0.75rem;">THE PEOPLE'S NEWSROOM</p>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <!-- ARTICLE MAIN CONTAINER -->
+  <main class="site-container">
+    <article class="article-container" id="articleWrapper">
+      <!-- Loading state -->
+      <div id="articleLoading" style="text-align:center; padding:3rem; color:var(--text-muted);">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p style="margin-top:1rem;">Loading story...</p>
+      </div>
+
+      <div id="articleBodyContainer" style="display:none;">
+        <header class="article-header">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="category-tag" id="articleCategory">KERALA</span>
+            <span id="articleBreakingBadge" class="breaking-flag" style="position:static; display:none;">
+              <i class="fa-solid fa-bolt"></i> BREAKING
+            </span>
+          </div>
+
+          <h1 class="article-h1" id="articleTitle"></h1>
+          <p class="article-lead-text" id="articleExcerpt"></p>
+
+          <div class="author-bar">
+            <div class="author-avatar" id="authorInitials">N4</div>
+            <div>
+              <div style="font-weight:700; color:#0f172a;" id="articleAuthor">Reporter</div>
+              <div style="color:var(--text-muted); font-size:0.8rem;">
+                Published: <span id="articleDate">Today</span> • <span id="articleViews">0</span> Views
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Reader Toolbar: Reading Time & Font Resizer -->
+        <div class="reader-toolbar">
+          <div class="reading-time-pill">
+            <i class="fa-regular fa-clock" style="color:var(--primary-red);"></i>
+            <span id="readingTime">2 മിനിറ്റ് വായന</span>
+          </div>
+          <div class="font-resizer-wrap">
+            <span class="font-label">അക്ഷര വലിപ്പം:</span>
+            <button type="button" class="font-btn" id="fontBtnSm" onclick="adjustFontSize(-1)" title="ഫോണ്ട് ചെറുതാക്കുക">A-</button>
+            <button type="button" class="font-btn active" id="fontBtnReset" onclick="resetFontSize()" title="സാധാരണ വലിപ്പം">A</button>
+            <button type="button" class="font-btn" id="fontBtnLg" onclick="adjustFontSize(1)" title="ഫോണ്ട് വലുതാക്കുക">A+</button>
+          </div>
+        </div>
+
+        <!-- Featured Media -->
+        <div id="articleMediaWrap">
+          <img src="" alt="" class="article-featured-img" id="articleImage">
+          <p class="image-caption" id="articleCaption"></p>
+        </div>
+
+        <!-- Formatted Story Content (Malayalam News Content) -->
+        <div class="article-content" id="articleContent"></div>
+
+        <!-- Social Share Toolbar -->
+        <div class="share-bar">
+          <span style="font-size:0.85rem; font-weight:700; color:var(--text-secondary); margin-right:8px;">SHARE STORY:</span>
+          <button class="share-btn" onclick="shareWhatsApp()"><i class="fa-brands fa-whatsapp text-green" style="color:#25d366;"></i> WhatsApp</button>
+          <button class="share-btn" onclick="shareTwitter()"><i class="fa-brands fa-x-twitter"></i> Post</button>
+          <button class="share-btn" onclick="shareFacebook()"><i class="fa-brands fa-facebook" style="color:#1877f2;"></i> Facebook</button>
+          <button class="share-btn" onclick="copyArticleLink()"><i class="fa-regular fa-copy"></i> <span id="copyLinkText">Copy Link</span></button>
+        </div>
+
+        <!-- Back to front page button -->
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--border-color); text-align:center;">
+          <a href="/" style="display:inline-block; padding:0.65rem 1.6rem; background:#B30000; color:#fff; border-radius:6px; font-weight:700; border:1px solid #FFC400; transition:background 0.2s;">
+            &larr; View All Latest News
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-wrap" style="display:flex; align-items:center; gap:12px; margin-bottom:0.85rem;">
+          <img src="/images/logo.png" alt="NEWSFOUR" style="height:46px; object-fit:contain; border-radius:4px;">
+          <div>
+            <div class="footer-brand-title">
+              <span class="footer-title-news">NEWS</span><span class="footer-title-four">FOUR</span>
+            </div>
+            <div class="footer-tagline">THE PEOPLE'S NEWSROOM</div>
+          </div>
+        </div>
+        <p id="footerDescription" style="margin-bottom:1rem; color:#cbd5e1; font-size:0.95rem; line-height:1.6;">സ്വതന്ത്രവും നിഷ്പക്ഷവുമായ ജനകീയ മാധ്യമപ്രവർത്തനം. വാർത്തകൾ വേഗത്തിലും കൃത്യതയിലും ജനങ്ങളിലേക്ക് എത്തിക്കുന്നു.</p>
+        <p id="footerLocation" style="color:#94a3b8;"><i class="fa-solid fa-location-dot" style="color:#FFC400; margin-right:6px;"></i> സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ</p>
+      </div>
+      <div>
+        <h4 style="color:#ffffff; margin-bottom:0.75rem; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; border-bottom:1.5px solid #FFC400; padding-bottom:4px; display:inline-block;">CATEGORIES</h4>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">KERALA</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">CRIME & SAFETY</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">SPORTS</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">BUSINESS & MARKET</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">ENTERTAINMENT & CINEMA</a></p>
+        <p style="margin-bottom:0.4rem;"><a href="/#category">GULF & NRI</a></p>
+      </div>
+      <div>
+        <h4 style="color:#ffffff; margin-bottom:0.75rem; text-transform:uppercase; font-size:0.85rem; letter-spacing:0.05em; border-bottom:1.5px solid #FFC400; padding-bottom:4px; display:inline-block;">CONTACT US</h4>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-envelope" style="color:#FFC400; margin-right:6px;"></i> <a id="footerContactEmail" href="mailto:draftnewsportal@gmail.com" style="color:#cbd5e1; text-decoration:none;">draftnewsportal@gmail.com</a></p>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-phone" style="color:#FFC400; margin-right:6px;"></i> <span id="footerContactPhone">+91 4862 224 444</span></p>
+        <p style="margin-bottom:0.4rem; color:#cbd5e1;"><i class="fa-solid fa-bullhorn" style="color:#FFC400; margin-right:6px;"></i> 24x7 സെൻട്രൽ ന്യൂസ്ഡെസ്ക്, തൊടുപുഴ</p>
+        <p style="margin-top:0.75rem; font-size:0.82rem; color:#94a3b8;">വാർത്തകളും വിവരങ്ങളും ഞങ്ങളുടെ ന്യൂസ്ഡെസ്കിലേക്ക് അറിയിക്കുക.</p>
+      </div>
+    </div>
+    <div class="footer-copy">
+      © 2026 NEWSFOUR • NEWSഫോർ • THE PEOPLE'S NEWSROOM. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script src="/js/article.js"></script>
+</body>
+</html>
